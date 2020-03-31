@@ -1,5 +1,6 @@
 const router = require('koa-router')();
-const Excel = require('exceljs')
+const Excel = require('exceljs');
+const send = require('koa-send');
 const  { 
 		QUERY_TABLE,
 		INSERT_TABLE,
@@ -25,25 +26,40 @@ let datas = [];
 router.post('/excel', async function (ctx, next) {
 	// const update = await updateExcel(ctx);
 	const { head, data } = ctx.body;
-	const picData = await getUrlHtml(head, data);
-	console.log(picData);
 	heads = head;
-	datas = picData;
+	datas = data;
 	ctx.body = {
-		status: 20000,
+		code: 20000,
 		msg: '上传成功',
 		data: []
 	};
 });
 
-router.get('/test', async function (ctx, next) {
+router.get('/create-excel', async function (ctx, next) {
+	if (heads.length === 0 && datas.length === 0) {
+		return ctx.body = {
+			code: 20000,
+			msg: '请上传excel文件',
+			data: []
+		}
+	}
+	const picData = await getUrlHtml(heads, datas);
+	console.log('picData', picData);
 	const excelUrl = await createExcel(heads, datas);
-	console.log(excelUrl);
+	excelUrl.replace(/\\/g, '/');
 	ctx.body = {
-		status: 20000,
-		msg: '上传成功',
-		data: []
+		code: 20000,
+		msg: '生成成功, 请下载',
+		data: {
+			url: excelUrl
+		}
 	};
+});
+
+router.get('/download/excel', async function (ctx, next) {
+	const url = ctx.query.url;
+	ctx.attachment(url);
+	await send(ctx, url);
 });
 
 module.exports = router;

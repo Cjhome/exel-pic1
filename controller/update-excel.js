@@ -10,15 +10,19 @@ const getUrlHtml = (head, data) => {
 					item[head[j]] = '';
 				}
 			}
-			setTimeout(function() {
-				getUrl(item.Link).then(function(picurl) {
-					item['图片'] = picurl;
-					if (i === data.length - 1) {
-						console.log('getUrl', data);
-						resovle(data);
-					}
-				});
-			}, 1000);
+			if (item.Link) {
+				setTimeout(function() {
+					getUrl(item.Link).then(function(picurl) {
+						item['图片'] = picurl;
+						if (i === data.length - 1) {
+							console.log('getUrl', data);
+							resovle(data);
+						}
+					}).catch(function (err) {
+						console.log(err);
+					});
+				}, 1000);
+			}
 		}
 	});
 };

@@ -9,7 +9,7 @@ const QUERY_TABLE = (tablename) => `SELECT * FROM ${tablename}`;
 
 const INSERT_TABLE = (tablename, {key, val}) => `INSERT INTO ${tablename}(${key}) VALUES(${val})`;
 
-const UPDATE_TABLE = (tablename, {primaryKey, primaryVal}, {key, val}) => `UPDATE ${tablename} SET ${key}=${val} WHERE(${primaryKey}=${primaryVal})`;
+const UPDATE_TABLE = (tablename, {primaryKey, primaryVal}, valStr) => `UPDATE ${tablename} SET ${valStr} WHERE(${primaryKey}=${primaryVal})`;
 
 const DELETE_TABLE = (tablename, {primaryKey, primaryVal}) => `DELETE FROM users WHERE(${primaryKey}=${primaryVal})`;
 
